@@ -15,14 +15,18 @@ public class Scene {
 
     private void setupScene(int width, int height) {
         camera = new Camera(width, height, window);
+        camera.setPosition(0, 0, 1);
 
         object = new Polygon();
         object.setShader(shaderProgramCache.getShader("default"));
     }
 
     public void update(float deltaTime) {
-        object.render();
         camera.update();
+    }
+
+    public void render() {
+        object.render();
     }
 
     public Camera getCamera() {

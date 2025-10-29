@@ -30,7 +30,6 @@ public class Engine {
     private FloatBuffer matrixBuffer;
 
     private Scene scene;
-    private Camera camera;
     private ShaderProgramCache shaderProgramCache;
 
     public void startEngine() {
@@ -112,6 +111,7 @@ public class Engine {
             oldTime = time;
 
             scene.update(deltaTime);
+            scene.render();
 
             shaderProgramCache.getShaderMap().values().forEach(shader -> {
                 // Set shader uniforms
