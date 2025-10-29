@@ -25,6 +25,8 @@ public class Engine {
     private int width;
     private int height;
 
+    private Scene scene;
+
     public void startEngine() {
         init();
         loop();
@@ -71,6 +73,8 @@ public class Engine {
 
         glViewport(0, 0, width, height);
 
+        scene = new Scene();
+
         glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
             if (width > 0 && height > 0) {
                 glViewport(0, 0, width, height);
@@ -98,6 +102,8 @@ public class Engine {
             long time = System.currentTimeMillis();
             float deltaTime = (time - oldTime) / 1000f;
             oldTime = time;
+
+            scene.update(deltaTime);
 
             glfwSwapBuffers(window);
             glfwPollEvents();
