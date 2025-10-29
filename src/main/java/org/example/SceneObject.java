@@ -2,15 +2,8 @@ package org.example;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
-
-import java.io.InputStream;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.charset.StandardCharsets;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -28,29 +21,24 @@ public abstract class SceneObject {
     protected Vector3f rotation;
     protected Vector3f scale;
     protected Matrix4f localMatrix;
+    protected Matrix4f worldMatrix;
 
 
     public SceneObject() {
-        verticesFloat = new float[]{
-                -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f,
-                0.0f,  0.5f, 0.0f
-        };
+        position = new Vector3f(0, 0, 0);
+        rotation = new Vector3f(0, 0, 0);
+        scale = new Vector3f(1, 1, 1);
 
-        indices = new int[] {
-                0, 1, 2,
-        };
+        localMatrix = new Matrix4f();
+        worldMatrix = new Matrix4f();
 
-        vaoId = glGenVertexArrays();
-        glBindVertexArray(vaoId);
-
-        ObjectUtils.bindVerticesList(verticesFloat);
-        ObjectUtils.bindIndicesList(indices);
     }
 
     public void render() {
         glUseProgram(shaderProgram);
 
+        int modelLoc = glGetUniformLocation(shaderProgram, "model");
+        glUniformMatrix4fv(modelLoc, false, worldMatrix.get(new float[16]));
         glBindVertexArray(vaoId);
         glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
@@ -58,5 +46,13 @@ public abstract class SceneObject {
 
     public void setShader(int shaderProgram) {
         this.shaderProgram = shaderProgram;
+    }
+
+    public void bindGeometry() {
+        vaoId = glGenVertexArrays();
+        glBindVertexArray(vaoId);
+
+        ObjectUtils.bindVerticesList(verticesFloat);
+        ObjectUtils.bindIndicesList(indices);
     }
 }

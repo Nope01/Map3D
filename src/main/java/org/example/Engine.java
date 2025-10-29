@@ -1,11 +1,13 @@
 package org.example;
 
+import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 import org.lwjgl.system.MemoryUtil;
 
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -15,6 +17,7 @@ import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL43.glDebugMessageCallback;
 import static org.lwjgl.opengl.GL43C.GL_DEBUG_OUTPUT;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -24,8 +27,10 @@ public class Engine {
     private long oldTime;
     private int width;
     private int height;
+    private FloatBuffer matrixBuffer;
 
     private Scene scene;
+    private Camera camera;
     private ShaderProgramCache shaderProgramCache;
 
     public void startEngine() {
@@ -73,10 +78,10 @@ public class Engine {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
         glViewport(0, 0, width, height);
+        matrixBuffer = BufferUtils.createFloatBuffer(16);
 
         shaderProgramCache = new ShaderProgramCache();
-        
-        scene = new Scene(shaderProgramCache);
+        scene = new Scene(width, height, shaderProgramCache, window);
 
         glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
             if (width > 0 && height > 0) {
@@ -107,6 +112,15 @@ public class Engine {
             oldTime = time;
 
             scene.update(deltaTime);
+
+            shaderProgramCache.getShaderMap().values().forEach(shader -> {
+                // Set shader uniforms
+                glUseProgram(shader);
+                int projLoc = glGetUniformLocation(shader, "projection");
+                glUniformMatrix4fv(projLoc, false, scene.getCamera().getProjectionMatrix().get(matrixBuffer)); matrixBuffer.rewind();
+                int viewLoc = glGetUniformLocation(shader, "view");
+                glUniformMatrix4fv(viewLoc, false, scene.getCamera().getViewMatrix().get(matrixBuffer)); matrixBuffer.rewind();
+            });
 
             glfwSwapBuffers(window);
             glfwPollEvents();
