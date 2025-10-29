@@ -39,53 +39,13 @@ public abstract class SceneObject {
 
         indices = new int[] {
                 0, 1, 2,
-
         };
 
         vaoId = glGenVertexArrays();
         glBindVertexArray(vaoId);
 
-        //Vertices
-        vboId = glGenBuffers();
-        FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(verticesFloat.length);
-        vertexBuffer.put(verticesFloat).flip();
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
-        glEnableVertexAttribArray(0);
-
-
-        //Indices
-        int vboId = glGenBuffers();
-        IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.length);
-        indicesBuffer.put(indices).flip();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
-
-        int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, loadShaderSource("shaders/default/vertex.glsl"));
-        glCompileShader(vertexShader);
-        if (glGetShaderi(vertexShader, GL_COMPILE_STATUS) == GL_FALSE) {
-            System.err.println("Vertex shader compilation failed: " + glGetShaderInfoLog(vertexShader));
-        }
-
-        int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, loadShaderSource("shaders/default/fragment.glsl"));
-        glCompileShader(fragmentShader);
-        if (glGetShaderi(fragmentShader, GL_COMPILE_STATUS) == GL_FALSE) {
-            System.err.println("Fragment shader compilation failed: " + glGetShaderInfoLog(vertexShader));
-        }
-
-        shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexShader);
-        glAttachShader(shaderProgram, fragmentShader);
-        glLinkProgram(shaderProgram);
-
-        glValidateProgram(shaderProgram);
-
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
-
+        ObjectUtils.bindVerticesList(verticesFloat);
+        ObjectUtils.bindIndicesList(indices);
     }
 
     public void render() {
@@ -96,15 +56,7 @@ public abstract class SceneObject {
         glBindVertexArray(0);
     }
 
-    private String loadShaderSource(String path){
-        try (InputStream stream = getClass().getClassLoader().getResourceAsStream(path)){
-            if (stream == null) {
-                throw new Exception("Cannot find file " + path);
-            }
-            return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to load shader: " + path, e);
-        }
+    public void setShader(int shaderProgram) {
+        this.shaderProgram = shaderProgram;
     }
 }

@@ -26,6 +26,7 @@ public class Engine {
     private int height;
 
     private Scene scene;
+    private ShaderProgramCache shaderProgramCache;
 
     public void startEngine() {
         init();
@@ -73,7 +74,9 @@ public class Engine {
 
         glViewport(0, 0, width, height);
 
-        scene = new Scene();
+        shaderProgramCache = new ShaderProgramCache();
+        
+        scene = new Scene(shaderProgramCache);
 
         glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
             if (width > 0 && height > 0) {
