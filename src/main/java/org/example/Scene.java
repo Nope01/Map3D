@@ -15,7 +15,7 @@ public class Scene {
 
     private void setupScene(int width, int height) {
         camera = new Camera(width, height, window);
-        camera.setPosition(0, 0, 1);
+        camera.setPosition(0, 0, 7);
 
         object = new Polygon();
         object.setShader(shaderProgramCache.getShader("default"));
