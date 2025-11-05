@@ -23,6 +23,7 @@ public class Scene {
 
     public void update(float deltaTime) {
         camera.update();
+        object.update();
     }
 
     public void render() {

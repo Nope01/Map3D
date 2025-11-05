@@ -34,13 +34,23 @@ public abstract class SceneObject {
 
     }
 
+    public void update() {
+        localMatrix.identity()
+                .translate(position)
+                .rotateX((float) Math.toRadians(rotation.x))
+                .rotateY((float) Math.toRadians(rotation.y))
+                .rotateZ((float) Math.toRadians(rotation.z))
+                .scale(scale);
+        worldMatrix.set(localMatrix);
+    }
+
     public void render() {
         glUseProgram(shaderProgram);
 
         int modelLoc = glGetUniformLocation(shaderProgram, "model");
         glUniformMatrix4fv(modelLoc, false, worldMatrix.get(new float[16]));
         glBindVertexArray(vaoId);
-        glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
 
