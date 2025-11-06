@@ -5,7 +5,9 @@ import org.example.shapes.Triangle;
 import org.joml.Vector3f;
 
 import java.util.List;
+import java.util.Map;
 
+import static org.example.VectorUtils.verticesToMap;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_BACK;
 
@@ -14,7 +16,8 @@ public class Polygon extends SceneObject {
         super();
         verticesFloat = SimplePolygon.getVerticesFloat();
         List<Vector3f> verticesVec = VectorUtils.floatToVector3f(SimplePolygon.getVerticesFloat());
-        indices = EarClipping.getTrianglesFromVertices(verticesVec);
+        Map<Vector3f, Integer> map = VectorUtils.verticesToMap(verticesVec);
+        indices = EarClipping.getTrianglesFromVertices(verticesVec, map);
         for (int i = 0; i < indices.length; i++) {
             System.out.print(indices[i++]);
             System.out.print(indices[i++]);

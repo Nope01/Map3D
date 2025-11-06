@@ -3,7 +3,9 @@ package org.example;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class VectorUtils {
 
@@ -24,5 +26,13 @@ public class VectorUtils {
             result.add(new Vector3f(floatList[count++], floatList[count++], floatList[count++]));
         }
         return result;
+    }
+
+    public static Map<Vector3f, Integer> verticesToMap(List<Vector3f> vertices) {
+        Map<Vector3f, Integer> map = new HashMap<>();
+        for (int i = 0; i < vertices.size(); i++) {
+            map.put(vertices.get(i), i);
+        }
+        return map;
     }
 }

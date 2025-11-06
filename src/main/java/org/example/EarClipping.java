@@ -5,11 +5,13 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import nl.bartlouwers.earcut4j.Earcut;
 
 public class EarClipping {
 
-    public static int[] getTrianglesFromVertices(List<Vector3f> vertices) {
+    public static int[] getTrianglesFromVertices(List<Vector3f> vertices, Map<Vector3f, Integer> map) {
 
         int[] indices = new int[(vertices.size()-2)*3];
         int indicesIndex = 0;
@@ -37,9 +39,9 @@ public class EarClipping {
 
             //TODO: Figure out how to keep index positions when removing vertices
             if (isEar(vertices, vertices.get(i), vertices.get(previousVertex), vertices.get(nextVertex))) {
-                indices[indicesIndex++] = SimplePolygon.vertexToIndex(vertices.get(previousVertex));
-                indices[indicesIndex++] = SimplePolygon.vertexToIndex(vertices.get(i));
-                indices[indicesIndex++] = SimplePolygon.vertexToIndex(vertices.get(nextVertex));
+                indices[indicesIndex++] = map.get(vertices.get(previousVertex));
+                indices[indicesIndex++] = map.get(vertices.get(i));
+                indices[indicesIndex++] = map.get(vertices.get(nextVertex));
                 System.out.println(vertices.remove(i));
                 i = 0;
             }
