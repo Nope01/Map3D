@@ -37,7 +37,6 @@ public class EarClipping {
                 nextVertex = i+1;
             }
 
-            //TODO: Figure out how to keep index positions when removing vertices
             if (isEar(vertices, vertices.get(i), vertices.get(previousVertex), vertices.get(nextVertex))) {
                 indices[indicesIndex++] = map.get(vertices.get(previousVertex));
                 indices[indicesIndex++] = map.get(vertices.get(i));
