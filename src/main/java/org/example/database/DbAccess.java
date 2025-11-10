@@ -22,7 +22,7 @@ public class DbAccess {
 
     }
 
-    public static long[] getNodesFromWay(String id) {
+    public static String[] getNodesFromWay(String id) {
         try (Connection connection = DbAccess.connectToDB()){
             Statement statement = connection.createStatement();
             String query = "SELECT * FROM way WHERE id = " + id;
@@ -34,7 +34,7 @@ public class DbAccess {
         } catch (SQLException e) {
             System.err.println("Connection failed: " + e.getMessage());;
         }
-        return new long[]{-999};
+        return new String[]{"-999"};
     }
 
     public static String[] getTagsFromWay(String id) {
@@ -67,14 +67,15 @@ public class DbAccess {
         return new double[]{-999};
     }
 
-    private static long[] sqlStringToIDList(String ids) {
+    private static String[] sqlStringToIDList(String ids) {
         String[] stringIDs = ids.substring(1, ids.length()-1).split(",");
-        long[] longIDs = new long[stringIDs.length];
-
-        for (int i = 0; i < longIDs.length; i++) {
-            longIDs[i] = Long.parseLong(stringIDs[i]);
-        }
-        return longIDs;
+        return stringIDs;
+//        long[] longIDs = new long[stringIDs.length];
+//
+//        for (int i = 0; i < longIDs.length; i++) {
+//            longIDs[i] = Long.parseLong(stringIDs[i]);
+//        }
+//        return longIDs;
     }
 
     private static String[] sqlStringToTagList(String tags) {
