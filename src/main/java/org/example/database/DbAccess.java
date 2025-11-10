@@ -22,7 +22,7 @@ public class DbAccess {
 
     }
 
-    public static long[] getNodesFromWay(long id) {
+    public static long[] getNodesFromWay(String id) {
         try (Connection connection = DbAccess.connectToDB()){
             Statement statement = connection.createStatement();
             String query = "SELECT * FROM way WHERE id = " + id;
@@ -37,7 +37,7 @@ public class DbAccess {
         return new long[]{-999};
     }
 
-    public static String[] getTagsFromWay(long id) {
+    public static String[] getTagsFromWay(String id) {
         try (Connection connection = DbAccess.connectToDB()){
             Statement statement = connection.createStatement();
             String query = "SELECT * FROM way WHERE id = " + id;
@@ -50,6 +50,21 @@ public class DbAccess {
             System.err.println("Connection failed: " + e.getMessage());;
         }
         return new String[]{"-999"};
+    }
+
+    public static double[] getLatLonFromNode(String id) {
+        try (Connection connection = DbAccess.connectToDB()) {
+            Statement statement = connection.createStatement();
+            String query = "SELECT * FROM node WHERE id = " + id;
+            ResultSet resultSet = statement.executeQuery(query);
+            resultSet.next();
+            return sqlStringToDoubleList(resultSet.getString(2) + "," + resultSet.getString(3));
+
+
+        } catch (SQLException e) {
+            System.err.println("Connection failed: " + e.getMessage());
+        }
+        return new double[]{-999};
     }
 
     private static long[] sqlStringToIDList(String ids) {
@@ -66,4 +81,16 @@ public class DbAccess {
         String[] stringIDs = tags.substring(1, tags.length()-1).split(",");
         return stringIDs;
     }
+
+
+    private static double[] sqlStringToDoubleList(String coords) {
+        String[] stringCoords = coords.substring(1, coords.length()-1).split(",");
+        double[] doubleCoords = new double[stringCoords.length];
+
+        for (int i = 0; i < doubleCoords.length; i++) {
+            doubleCoords[i] = Double.parseDouble(stringCoords[i]);
+        }
+        return doubleCoords;
+    }
+
 }
