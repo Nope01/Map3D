@@ -1,23 +1,32 @@
 package org.example;
 
+import org.example.database.Way;
 import org.example.shapes.SimplePolygon;
 import org.example.shapes.Triangle;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.example.VectorUtils.verticesToMap;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_BACK;
 
 public class Polygon extends SceneObject {
-    public Polygon() {
+    public Polygon(String wayID) {
         super();
-        verticesFloat = SimplePolygon.getVerticesFloat();
-        List<Vector3f> verticesVec = VectorUtils.floatToVector3f(SimplePolygon.getVerticesFloat());
+//        verticesFloat = SimplePolygon.getVerticesFloat();
+//        List<Vector3f> verticesVec = VectorUtils.floatToVector3f(SimplePolygon.getVerticesFloat());
+//        Map<Vector3f, Integer> map = VectorUtils.verticesToMap(verticesVec);
+//        indices = EarClipping.getTrianglesFromVertices(verticesVec, map);
+
+        Way way = new Way(wayID);
+        List<Vector3f> verticesVec = way.wayVectors();
+        verticesFloat = VectorUtils.vector3fToFloat(verticesVec);
         Map<Vector3f, Integer> map = VectorUtils.verticesToMap(verticesVec);
         indices = EarClipping.getTrianglesFromVertices(verticesVec, map);
+
+        System.out.println(this);
         bindGeometry();
     }
 

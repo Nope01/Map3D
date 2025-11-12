@@ -10,10 +10,10 @@ public class Main {
     public static void main(String[] args) {
         Way way = new Way("4224978");
         Node node = new Node("12642563680");
-        System.out.println(way.toString());
+        System.out.println(way);
 
-//        Engine engine = new Engine();
-//        engine.startEngine();
+        Engine engine = new Engine();
+        engine.startEngine();
     }
 }
 

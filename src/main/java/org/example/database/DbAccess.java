@@ -12,7 +12,6 @@ public class DbAccess {
     public static Connection connectToDB() {
         try  {
             Connection connection = DriverManager.getConnection(url, user, password);
-            System.out.println("Connected to database!");
             return connection;
 
 
@@ -30,7 +29,6 @@ public class DbAccess {
             String query = "SELECT * FROM way WHERE id = " + id;
             ResultSet resultSet = statement.executeQuery(query);
             resultSet.next();
-            System.out.println("Results got!");
             return sqlStringToNodeList(resultSet.getString(2));
 
         } catch (SQLException e) {
@@ -45,7 +43,6 @@ public class DbAccess {
             String query = "SELECT * FROM way WHERE id = " + id;
             ResultSet resultSet = statement.executeQuery(query);
             resultSet.next();
-            System.out.println("Results got!");
             return sqlStringToTagList(resultSet.getString(3));
 
         } catch (SQLException e) {
@@ -90,7 +87,7 @@ public class DbAccess {
 
 
     private static double[] sqlStringToDoubleList(String coords) {
-        String[] stringCoords = coords.substring(1, coords.length()-1).split(",");
+        String[] stringCoords = coords.split(",");
         double[] doubleCoords = new double[stringCoords.length];
 
         for (int i = 0; i < doubleCoords.length; i++) {

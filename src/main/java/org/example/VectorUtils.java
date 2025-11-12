@@ -1,5 +1,6 @@
 package org.example;
 
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -9,12 +10,13 @@ import java.util.Map;
 
 public class VectorUtils {
 
-    public static float[] vector3fToFloat (Vector3f[] vecList) {
-        float[] result = new float[vecList.length * 2];
+    public static float[] vector3fToFloat (List<Vector3f> vecList) {
+        float[] result = new float[vecList.size() * 3];
         int count = 0;
         for (Vector3f vec : vecList) {
             result[count++] = vec.x;
             result[count++] = vec.y;
+            result[count++] = 0;
         }
         return result;
     }

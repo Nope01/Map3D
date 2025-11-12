@@ -16,17 +16,23 @@ public class Camera {
     private Matrix4f invViewMatrix;
     private Matrix4f invProjMatrix;
 
+    private Vector2f lastMousePos= new Vector2f();
+    private Vector2f mouseDelta = new Vector2f();
+    private Vector2f mousePos = new Vector2f();
+    private Vector3f ndcPos= new Vector3f();
+
     private Vector3f up;
     private Vector3f direction;
     private Vector3f right;
     private float moveSpeed;
     private float rotateSpeed;
     private static final float FOV = (float) Math.toRadians(60.0f);
-    private static final float Z_FAR = 100.f;
+    private static final float Z_FAR = 10000.f;
     private static final float Z_NEAR = 1f;
     private float mouseSensitivity;
     private float panSensitivity;
 
+    private int justScrolled = 0;
     private long window;
 
     public Camera(int width, int height, long window) {
@@ -48,13 +54,53 @@ public class Camera {
         projectionMatrix = new Matrix4f();
         updateProjection(width, height);
         this.window = window;
+
+        // Initialize mouse position
+        double[] x = new double[1];
+        double[] y = new double[1];
+        glfwGetCursorPos(window, x, y);
+        lastMousePos.set((float) x[0], (float) y[0]);
+        mousePos.set((float) x[0], (float) y[0]);
     }
 
     public boolean isKeyPressed(int key) {
         return glfwGetKey(window, key) == GLFW_PRESS;
     }
 
+    public boolean isLeftMousePressed(int mouseButton) {
+        return glfwGetMouseButton(window, mouseButton) == GLFW_PRESS;
+    }
+
+    public boolean isRightMousePressed(int mouseButton) {
+        return glfwGetMouseButton(window, mouseButton) == GLFW_PRESS;
+    }
+
+    public boolean isMiddleClicked() {
+        return glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_3) == GLFW_PRESS;
+    }
+
+    public int isMouseWheelMoved() {
+        if (justScrolled > 0) {
+            justScrolled = 0;
+            return 1;
+        }
+        if (justScrolled < 0) {
+            justScrolled = 0;
+            return -1;
+        }
+        return 0;
+    }
+
     public void update() {
+        double[] x = new double[1];
+        double[] y = new double[1];
+        glfwGetCursorPos(window, x, y);
+        float currentX = (float) x[0];
+        float currentY = (float) y[0];
+        mouseDelta.set(currentX - lastMousePos.x, currentY - lastMousePos.y);
+        mousePos.set((float) x[0], (float) y[0]);
+        lastMousePos.set(currentX, currentY);
+
         // Keyboard movement
         if (isKeyPressed(GLFW_KEY_W)) moveForward(moveSpeed);
         if (isKeyPressed(GLFW_KEY_S)) moveBackwards(moveSpeed);
@@ -69,11 +115,14 @@ public class Camera {
         if (isKeyPressed(GLFW_KEY_LEFT)) rotation.y += rotateSpeed;
         if (isKeyPressed(GLFW_KEY_RIGHT)) rotation.y -= rotateSpeed;
 
-//        //Middle click pan
-//        if (isMiddleClicked()) {
-//            Vector2f delta = getMouseDelta();
-//            this.addPosition(delta.y * panSensitivity, delta.x * panSensitivity);
-//        }
+
+        //Middle click pan
+        if (isMiddleClicked()) {
+            Vector2f delta = mouseDelta;
+            this.addPosition(delta.y * panSensitivity, delta.x * panSensitivity);
+        }
+
+
     }
 
     public void updateProjection(int width, int height) {

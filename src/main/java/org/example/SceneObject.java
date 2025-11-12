@@ -1,7 +1,9 @@
 package org.example;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
@@ -64,5 +66,18 @@ public abstract class SceneObject {
 
         ObjectUtils.bindVerticesList(verticesFloat);
         ObjectUtils.bindIndicesList(indices);
+    }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        String newLine = System.lineSeparator();
+
+        for (int i = 0; i < verticesFloat.length; i++) {
+            stringBuilder.append(verticesFloat[i++]).append(", ");
+            stringBuilder.append(verticesFloat[i++]).append(", ");
+            stringBuilder.append(verticesFloat[i]);
+            stringBuilder.append(newLine);
+        }
+        return stringBuilder.toString();
     }
 }
