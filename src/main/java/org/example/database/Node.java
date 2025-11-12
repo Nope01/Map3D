@@ -14,4 +14,8 @@ public class Node {
         lon = coords[1];
     }
 
+    public String toString() {
+        return (id + " - " + lat + ", " + lon);
+    }
+
 }

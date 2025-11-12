@@ -1,6 +1,8 @@
 package org.example.database;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DbAccess {
     public static String url = "jdbc:postgresql://localhost:5432/postgres";
@@ -22,22 +24,22 @@ public class DbAccess {
 
     }
 
-    public static String[] getNodesFromWay(String id) {
+    public static List<Node> getNodesFromWay(String id) {
         try (Connection connection = DbAccess.connectToDB()){
             Statement statement = connection.createStatement();
             String query = "SELECT * FROM way WHERE id = " + id;
             ResultSet resultSet = statement.executeQuery(query);
             resultSet.next();
             System.out.println("Results got!");
-            return sqlStringToIDList(resultSet.getString(2));
+            return sqlStringToNodeList(resultSet.getString(2));
 
         } catch (SQLException e) {
             System.err.println("Connection failed: " + e.getMessage());;
         }
-        return new String[]{"-999"};
+        return null;
     }
 
-    public static String[] getTagsFromWay(String id) {
+    public static List<Tag> getTagsFromWay(String id) {
         try (Connection connection = DbAccess.connectToDB()){
             Statement statement = connection.createStatement();
             String query = "SELECT * FROM way WHERE id = " + id;
@@ -49,7 +51,7 @@ public class DbAccess {
         } catch (SQLException e) {
             System.err.println("Connection failed: " + e.getMessage());;
         }
-        return new String[]{"-999"};
+        return null;
     }
 
     public static double[] getLatLonFromNode(String id) {
@@ -67,20 +69,23 @@ public class DbAccess {
         return new double[]{-999};
     }
 
-    private static String[] sqlStringToIDList(String ids) {
-        String[] stringIDs = ids.substring(1, ids.length()-1).split(",");
-        return stringIDs;
-//        long[] longIDs = new long[stringIDs.length];
-//
-//        for (int i = 0; i < longIDs.length; i++) {
-//            longIDs[i] = Long.parseLong(stringIDs[i]);
-//        }
-//        return longIDs;
+    private static List<Node> sqlStringToNodeList(String ids) {
+        //Split string into node IDs, then make a new node object using id and another sql query on constructor
+        String[] stringNodes = ids.substring(1, ids.length()-1).split(",");
+        List<Node> nodesList = new ArrayList<>();
+        for (int i = 0; i < stringNodes.length; i++) {
+            nodesList.add(new Node(stringNodes[i]));
+        }
+        return nodesList;
     }
 
-    private static String[] sqlStringToTagList(String tags) {
-        String[] stringIDs = tags.substring(1, tags.length()-1).split(",");
-        return stringIDs;
+    private static List<Tag> sqlStringToTagList(String tags) {
+        String[] stringTags = tags.substring(1, tags.length()-1).split(",");
+        List<Tag> tagsList = new ArrayList<>();
+        for (int i = 0; i < stringTags.length; i+= 2) {
+            tagsList.add(new Tag(stringTags[i], stringTags[i+1]));
+        }
+        return tagsList;
     }
 
 
