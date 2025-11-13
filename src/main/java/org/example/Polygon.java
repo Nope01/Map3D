@@ -26,7 +26,6 @@ public class Polygon extends SceneObject {
         Map<Vector3f, Integer> map = VectorUtils.verticesToMap(verticesVec);
         indices = EarClipping.getTrianglesFromVertices(verticesVec, map);
 
-        System.out.println(this);
         bindGeometry();
     }
 

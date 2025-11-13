@@ -41,7 +41,7 @@ public class EarClipping {
                 indices[indicesIndex++] = map.get(vertices.get(previousVertex));
                 indices[indicesIndex++] = map.get(vertices.get(i));
                 indices[indicesIndex++] = map.get(vertices.get(nextVertex));
-                System.out.println(vertices.remove(i));
+                vertices.remove(i);
                 i = 0;
             }
         }

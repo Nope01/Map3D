@@ -17,8 +17,8 @@ public class Node {
         double[] latLon = DbAccess.getLatLonFromNode(id);
         lat = latLon[0];
         lon = latLon[1];
-        coords.x = (float) (lon*1000);
-        coords.y = (float) (lat*1000);
+        coords.x = (float) (lon*10000);
+        coords.y = (float) (lat*10000);
     }
 
 

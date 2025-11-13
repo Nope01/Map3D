@@ -57,7 +57,7 @@ public class Engine {
 
         //Make a window
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        window = glfwCreateWindow(width, height, "DND map maker", NULL, NULL);
+        window = glfwCreateWindow(width, height, "Map 3D", NULL, NULL);
         if (window == NULL) {
             glfwTerminate();
             throw new RuntimeException("Failed to create GLFW window");

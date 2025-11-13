@@ -23,6 +23,25 @@ public class DbAccess {
 
     }
 
+    public static List<String> getAllWayIDs() {
+        try (Connection connection = DbAccess.connectToDB()) {
+            Statement statement = connection.createStatement();
+            String query = "SELECT * FROM way WHERE tags[1] = 'building' or tags[1] = 'addr:country'";
+            ResultSet resultSet = statement.executeQuery(query);
+
+            List<String> result = new ArrayList<>();
+            while (resultSet.next()) {
+                result.add(resultSet.getString(1));
+            }
+            return result;
+
+        } catch (SQLException e) {
+            System.err.println("Connection failed: " + e.getMessage());;
+        }
+        return null;
+
+    }
+
     public static List<Node> getNodesFromWay(String id) {
         try (Connection connection = DbAccess.connectToDB()){
             Statement statement = connection.createStatement();
@@ -79,9 +98,15 @@ public class DbAccess {
     private static List<Tag> sqlStringToTagList(String tags) {
         String[] stringTags = tags.substring(1, tags.length()-1).split(",");
         List<Tag> tagsList = new ArrayList<>();
-        for (int i = 0; i < stringTags.length; i+= 2) {
-            tagsList.add(new Tag(stringTags[i], stringTags[i+1]));
+        if (stringTags.length % 2 == 1) {
+            tagsList.add(new Tag(stringTags[0], "what"));
         }
+        else {
+            for (int i = 0; i < stringTags.length; i+= 2) {
+                tagsList.add(new Tag(stringTags[i], stringTags[i+1]));
+            }
+        }
+
         return tagsList;
     }
 
