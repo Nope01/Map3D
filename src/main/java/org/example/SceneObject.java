@@ -13,6 +13,7 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public abstract class SceneObject {
     protected String id;
+    protected ShaderProgramCache shaderProgramCache;
     protected int shaderProgram;
     protected transient int vaoId, vboId;
 
@@ -26,13 +27,16 @@ public abstract class SceneObject {
     protected Matrix4f worldMatrix;
 
 
-    public SceneObject() {
+    public SceneObject(ShaderProgramCache shaderProgramCache) {
         position = new Vector3f(0, 0, 0);
         rotation = new Vector3f(0, 0, 0);
         scale = new Vector3f(1, 1, 1);
 
         localMatrix = new Matrix4f();
         worldMatrix = new Matrix4f();
+
+        this.shaderProgramCache = shaderProgramCache;
+        setShader("default");
 
     }
 
@@ -51,13 +55,18 @@ public abstract class SceneObject {
 
         int modelLoc = glGetUniformLocation(shaderProgram, "model");
         glUniformMatrix4fv(modelLoc, false, worldMatrix.get(new float[16]));
+
         glBindVertexArray(vaoId);
+
+//        glPointSize(5.0f);
+//        glDrawArrays(GL_POINTS, 0, verticesFloat.length / 3);
+
         glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
 
-    public void setShader(int shaderProgram) {
-        this.shaderProgram = shaderProgram;
+    public void setShader(String shaderName) {
+        this.shaderProgram = shaderProgramCache.getShader(shaderName);
     }
 
     public void bindGeometry() {
@@ -79,5 +88,16 @@ public abstract class SceneObject {
             stringBuilder.append(newLine);
         }
         return stringBuilder.toString();
+    }
+
+
+    //Position setting
+
+    public void setPosition(float x, float y, float z) {
+        position.set(x, y, z);
+    }
+
+    public void setPosition(Vector3fc position) {
+        this.position.set(position);
     }
 }

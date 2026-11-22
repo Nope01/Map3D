@@ -1,6 +1,8 @@
 package org.example;
 
 import org.example.database.DbAccess;
+import org.example.database.Way;
+import org.example.shapes.Triangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,19 +22,21 @@ public class Scene {
 
     private void setupScene(int width, int height) {
         camera = new Camera(width, height, window);
-        camera.setPosition(74165, 437275, 100);
+        camera.setPosition(1513268, -334932, 10);
 
-        List<String> allWayIDs = DbAccess.getAllWayIDs();
-        for (int i = 0; i < allWayIDs.size(); i++) {
-            objects.add(new Polygon(allWayIDs.get(i)));
-            objects.get(i).setShader(shaderProgramCache.getShader("default"));
-
+        Polygon testWay = new Polygon(shaderProgramCache, "1577105508");
+        testWay.setPosition(0, 0, 0);
+        for (int i = 0; i < testWay.verticesFloat.length; i++) {
+            System.out.println(testWay.verticesFloat[i]);
         }
 
+
+        objects.add(testWay);
+        //objects.add(new Polygon(shaderProgramCache, Triangle.getVerticesFloat(), Triangle.getIndices()));
     }
 
     public void update(float deltaTime) {
-        camera.update();
+        camera.update(deltaTime);
         for (Polygon polygon : objects) {
             polygon.update();
         }
@@ -46,6 +50,6 @@ public class Scene {
 
     public Camera getCamera() {
         return camera;
-    }
+    } 
 
 }

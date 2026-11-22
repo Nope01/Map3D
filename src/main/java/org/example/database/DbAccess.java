@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DbAccess {
-    public static String url = "jdbc:postgresql://localhost:5432/postgres";
+    public static String url = "jdbc:postgresql://localhost:5432/Australia";
     public static String user = "postgres";
     public static String password = "nope";
 
@@ -26,7 +26,7 @@ public class DbAccess {
     public static List<String> getAllWayIDs() {
         try (Connection connection = DbAccess.connectToDB()) {
             Statement statement = connection.createStatement();
-            String query = "SELECT * FROM way WHERE tags[1] = 'building' or tags[1] = 'addr:country'";
+            String query = "SELECT * FROM ways WHERE tags[1] = 'building' or tags[1] = 'addr:country'";
             ResultSet resultSet = statement.executeQuery(query);
 
             List<String> result = new ArrayList<>();
@@ -45,7 +45,7 @@ public class DbAccess {
     public static List<Node> getNodesFromWay(String id) {
         try (Connection connection = DbAccess.connectToDB()){
             Statement statement = connection.createStatement();
-            String query = "SELECT * FROM way WHERE id = " + id;
+            String query = "SELECT * FROM ways WHERE id = " + id;
             ResultSet resultSet = statement.executeQuery(query);
             resultSet.next();
             return sqlStringToNodeList(resultSet.getString(2));
@@ -59,7 +59,7 @@ public class DbAccess {
     public static List<Tag> getTagsFromWay(String id) {
         try (Connection connection = DbAccess.connectToDB()){
             Statement statement = connection.createStatement();
-            String query = "SELECT * FROM way WHERE id = " + id;
+            String query = "SELECT * FROM ways WHERE id = " + id;
             ResultSet resultSet = statement.executeQuery(query);
             resultSet.next();
             return sqlStringToTagList(resultSet.getString(3));
@@ -73,7 +73,7 @@ public class DbAccess {
     public static double[] getLatLonFromNode(String id) {
         try (Connection connection = DbAccess.connectToDB()) {
             Statement statement = connection.createStatement();
-            String query = "SELECT * FROM node WHERE id = " + id;
+            String query = "SELECT * FROM nodes WHERE id = " + id;
             ResultSet resultSet = statement.executeQuery(query);
             resultSet.next();
             return sqlStringToDoubleList(resultSet.getString(2) + "," + resultSet.getString(3));

@@ -111,7 +111,6 @@ public class Engine {
             oldTime = time;
 
             scene.update(deltaTime);
-            scene.render();
 
             shaderProgramCache.getShaderMap().values().forEach(shader -> {
                 // Set shader uniforms
@@ -121,6 +120,8 @@ public class Engine {
                 int viewLoc = glGetUniformLocation(shader, "view");
                 glUniformMatrix4fv(viewLoc, false, scene.getCamera().getViewMatrix().get(matrixBuffer)); matrixBuffer.rewind();
             });
+
+            scene.render();
 
             glfwSwapBuffers(window);
             glfwPollEvents();

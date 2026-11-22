@@ -49,7 +49,7 @@ public class Camera {
         moveSpeed = 0.1f;
         rotateSpeed = 1.0f;
         mouseSensitivity = 0.05f;
-        panSensitivity = 0.01f;
+        panSensitivity = 1.0f;
 
         projectionMatrix = new Matrix4f();
         updateProjection(width, height);
@@ -61,6 +61,7 @@ public class Camera {
         glfwGetCursorPos(window, x, y);
         lastMousePos.set((float) x[0], (float) y[0]);
         mousePos.set((float) x[0], (float) y[0]);
+        recalculate();
     }
 
     public boolean isKeyPressed(int key) {
@@ -91,7 +92,7 @@ public class Camera {
         return 0;
     }
 
-    public void update() {
+    public void update(float deltaTime) {
         double[] x = new double[1];
         double[] y = new double[1];
         glfwGetCursorPos(window, x, y);
@@ -100,6 +101,8 @@ public class Camera {
         mouseDelta.set(currentX - lastMousePos.x, currentY - lastMousePos.y);
         mousePos.set((float) x[0], (float) y[0]);
         lastMousePos.set(currentX, currentY);
+
+
 
         // Keyboard movement
         if (isKeyPressed(GLFW_KEY_W)) moveForward(moveSpeed);
@@ -121,8 +124,7 @@ public class Camera {
             Vector2f delta = mouseDelta;
             this.addPosition(delta.y * panSensitivity, delta.x * panSensitivity);
         }
-
-
+        recalculate();
     }
 
     public void updateProjection(int width, int height) {
@@ -148,11 +150,11 @@ public class Camera {
     public Matrix4f getProjectionMatrix() { return projectionMatrix; }
 
     public void setPosition(Vector3f position) {
-        position.set(position);
+        this.position.set(position);
         recalculate();
     }
     public void setPosition(float x, float y, float z) {
-        position.set(x, y, z);
+        this.position.set(x, y, z);
         recalculate();
     }
 

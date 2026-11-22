@@ -15,4 +15,6 @@ public class Triangle {
                 0, 1, 2,
         };
     }
+
+
 }

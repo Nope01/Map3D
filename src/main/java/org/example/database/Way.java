@@ -15,6 +15,8 @@ public class Way {
         nodes = DbAccess.getNodesFromWay(wayID);
         tags = DbAccess.getTagsFromWay(wayID);
 
+        System.out.println(nodes.size() + " nodes in way " + wayID);
+
         sortNodesClockwise();
     }
 
