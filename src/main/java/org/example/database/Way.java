@@ -17,7 +17,7 @@ public class Way {
 
         System.out.println(nodes.size() + " nodes in way " + wayID);
 
-        sortNodesClockwise();
+        //sortNodesClockwise();
     }
 
     public void sortNodesClockwise() {

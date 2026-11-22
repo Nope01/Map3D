@@ -115,7 +115,6 @@ dependencies {
     implementation "org.joml:joml:${jomlVersion}"
     implementation "org.joml:joml-primitives:${joml_primitivesVersion}"
 
-
     implementation "nl.bartlouwers:earcut4j:3.0.3"
 
     implementation "org.postgresql:postgresql:42.7.4"
@@ -123,6 +122,8 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    implementation 'org.maplibre:earcut4j:3.0.0'
 }
 
 tasks.test {

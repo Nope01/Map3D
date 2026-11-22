@@ -24,14 +24,12 @@ public class Scene {
         camera = new Camera(width, height, window);
         camera.setPosition(1513268, -334932, 10);
 
-        Polygon testWay = new Polygon(shaderProgramCache, "1577105508");
-        testWay.setPosition(0, 0, 0);
-        for (int i = 0; i < testWay.verticesFloat.length; i++) {
-            System.out.println(testWay.verticesFloat[i]);
-        }
+//        Polygon testWay = new Polygon(shaderProgramCache, "1577105508");
+//        testWay.setPosition(0, 0, 0);
 
-
-        objects.add(testWay);
+        OSMWayRenderer.WayGeometry geometry = new OSMWayRenderer().createGeometry(new Way("1577105508").wayVectors(), true);
+        Polygon polygon = new Polygon(shaderProgramCache, geometry.vertices, geometry.indices);
+        objects.add(polygon);
         //objects.add(new Polygon(shaderProgramCache, Triangle.getVerticesFloat(), Triangle.getIndices()));
     }
 
