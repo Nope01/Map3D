@@ -49,7 +49,7 @@ public class Camera {
         moveSpeed = 0.1f;
         rotateSpeed = 1.0f;
         mouseSensitivity = 0.05f;
-        panSensitivity = 1.0f;
+        panSensitivity = 0.01f;
 
         projectionMatrix = new Matrix4f();
         updateProjection(width, height);

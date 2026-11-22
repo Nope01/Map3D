@@ -22,15 +22,18 @@ public class Scene {
 
     private void setupScene(int width, int height) {
         camera = new Camera(width, height, window);
-        camera.setPosition(1513268, -334932, 10);
+        camera.setPosition(1513268, -334932, 50);
 
-//        Polygon testWay = new Polygon(shaderProgramCache, "1577105508");
-//        testWay.setPosition(0, 0, 0);
+        Polygon testWay = new Polygon(shaderProgramCache, "1577105508");
+        Polygon school = new Polygon(shaderProgramCache, "176604410");
+        Polygon road = new Polygon(shaderProgramCache, "25050914");
+        objects.add(testWay);
+        objects.add(school);
+        objects.add(road);
 
-        OSMWayRenderer.WayGeometry geometry = new OSMWayRenderer().createGeometry(new Way("1577105508").wayVectors(), true);
-        Polygon polygon = new Polygon(shaderProgramCache, geometry.vertices, geometry.indices);
-        objects.add(polygon);
-        //objects.add(new Polygon(shaderProgramCache, Triangle.getVerticesFloat(), Triangle.getIndices()));
+//        OSMWayRenderer.WayGeometry geometry = new OSMWayRenderer().createGeometry(new Way("1577105508").wayVectors(), true);
+//        Polygon polygon = new Polygon(shaderProgramCache, geometry.vertices, geometry.indices);
+//        objects.add(polygon);
     }
 
     public void update(float deltaTime) {
