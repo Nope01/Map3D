@@ -12,14 +12,9 @@ public class Polygon extends SceneObject {
 
     public WayType type;
 
-    /**
-     * Creates a Polygon from an OSM way ID.
-     * Determines whether the way is closed automatically.
-     */
-    public Polygon(ShaderProgramCache shaderProgramCache, String wayID) {
-        super(shaderProgramCache);
 
-        Way way = new Way(wayID);
+    public Polygon(ShaderProgramCache shaderProgramCache, Way way) {
+        super(shaderProgramCache);
         List<Vector3f> nodes = way.wayVectors();
         boolean closed = isClosedWay(nodes);
 
@@ -34,10 +29,10 @@ public class Polygon extends SceneObject {
 
         bindGeometry();
     }
+    public Polygon(ShaderProgramCache shaderProgramCache, String wayID) {
+        this(shaderProgramCache, new Way(wayID));
+    }
 
-    /**
-     * Creates geometry manually, defaulting to a filled polygon.
-     */
     public Polygon(
             ShaderProgramCache shaderProgramCache,
             float[] verticesFloat,
@@ -51,9 +46,7 @@ public class Polygon extends SceneObject {
         );
     }
 
-    /**
-     * Creates geometry manually with an explicit rendering type.
-     */
+
     public Polygon(
             ShaderProgramCache shaderProgramCache,
             float[] verticesFloat,
@@ -71,21 +64,17 @@ public class Polygon extends SceneObject {
         bindGeometry();
     }
 
-    /**
-     * Maps the OSM geometry type to an OpenGL draw mode.
-     */
+
     private void configureDrawMode() {
 
         switch (type) {
 
             case POLYGON:
                 setDrawMode(GL_TRIANGLES);
-                System.out.println("Type is polygon");
                 break;
 
             case LINE:
                 setDrawMode(GL_LINES);
-                System.out.println("Type is line");
                 break;
 
             default:
@@ -95,11 +84,7 @@ public class Polygon extends SceneObject {
         }
     }
 
-    /**
-     * Determines whether an OSM way is closed.
-     *
-     * OSM ways normally repeat their first node at the end.
-     */
+
     private boolean isClosedWay(List<Vector3f> nodes) {
 
         if (nodes == null || nodes.size() < 4) {

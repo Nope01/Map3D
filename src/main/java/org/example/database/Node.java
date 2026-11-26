@@ -1,29 +1,45 @@
+
 package org.example.database;
 
-import org.joml.Vector3d;
 import org.joml.Vector3f;
 
-import java.sql.*;
-
 public class Node {
+
+    public static final int COORD_MULTIPLIER = 10000;
+
     public String id;
     public double lat;
     public double lon;
-    //Coords are swapped lat and lon for converting to x y dimensions
+
     public Vector3f coords = new Vector3f();
 
-    public Node (String nodeID) {
+    public Node(String nodeID) {
         id = nodeID;
+
         double[] latLon = DbAccess.getLatLonFromNode(id);
+
         lat = latLon[0];
         lon = latLon[1];
-        coords.x = (float) (lon*10000);
-        coords.y = (float) (lat*10000);
+
+        updateCoords();
     }
 
+    public Node(String nodeID, double latitude, double longitude) {
+        id = nodeID;
+        lat = latitude;
+        lon = longitude;
 
+        updateCoords();
+    }
+
+    private void updateCoords() {
+        // Coordinates are swapped lat/lon for converting to X/Y dimensions.
+        coords.x = (float) (lon * COORD_MULTIPLIER);
+        coords.y = (float) (lat * COORD_MULTIPLIER);
+    }
+
+    @Override
     public String toString() {
-        return (id + " - " + lat + ", " + lon);
+        return id + " - " + lat + ", " + lon;
     }
-
 }

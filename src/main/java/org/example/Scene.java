@@ -22,14 +22,23 @@ public class Scene {
 
     private void setupScene(int width, int height) {
         camera = new Camera(width, height, window);
-        camera.setPosition(1513268, -334932, 50);
+        //7 digits for x (lon), 6 digits for y (lat)
+        camera.setPosition(1511588, -338141, 100);
 
-        Polygon testWay = new Polygon(shaderProgramCache, "1577105508");
-        Polygon school = new Polygon(shaderProgramCache, "176604410");
-        Polygon road = new Polygon(shaderProgramCache, "25050914");
-        objects.add(testWay);
-        objects.add(school);
-        objects.add(road);
+        List<Way> ways = DbAccess.getAllWaysAroundAPoint(
+                -33.814215364215464,
+                151.16991217659032,
+                500,
+                "highway"
+        );
+        for (Way way : ways) {
+            System.out.println(way.toString());
+            Polygon polygon = new Polygon(shaderProgramCache, way);
+            objects.add(polygon);
+        }
+
+        
+        System.out.println("all objects added");
 
 //        OSMWayRenderer.WayGeometry geometry = new OSMWayRenderer().createGeometry(new Way("1577105508").wayVectors(), true);
 //        Polygon polygon = new Polygon(shaderProgramCache, geometry.vertices, geometry.indices);
